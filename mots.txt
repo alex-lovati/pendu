@@ -1,3 +1,3 @@
-Sylvanas      
-Anduin
-Lara
+sylvanas      
+anduin
+lara
