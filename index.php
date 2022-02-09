@@ -9,27 +9,18 @@ if (isset($_POST["reset"])) {
     header("location: index.php");
 }
 
-if(!isset($_SESSION['word'])){
+if (!isset($_SESSION["mot"])) {
+    // On ouvre le fichier .txt
+    $arrayMot = chooseWord(file("mots.txt"));
+    // On compte le nombre de mots - 1 pour commencer à 0
+    $countMot =  count($arrayMot,) - 1;
+    // On utilise rand() pour en choisir un aléatoirement
+    $randMot = rand(0, $countMot);
 
-    // Pour choisir un mot de manière aléatoire
-    $strarray = file_get_contents('mots.txt');
-    $strarray = array($strarray);
-
-    $nombreDeMot =  count($strarray) - 1;
-    $numrand = rand(0, $nombreDeMot);
-    $_SESSION["mot"] = $strarray[$numrand];
-echo $_SESSION['mot'];
-
-    // $mots = count(array($strarray)) - 1;
-
-    // $motRand = rand(0, $mots);
-    // echo $motRand[$strarray];
-
+    // On transforme la variable en $_SESSION
+    $_SESSION["mot"] = $arrayMot[$randMot]; 
+    // echo $_SESSION['mot'];
 }
-
-// $Mots = array($strarray);
-// echo $Mots[array_rand($Mots)];
-// rand(0,$Mots);
 
 ?>
 
