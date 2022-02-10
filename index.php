@@ -13,7 +13,7 @@ if (isset($_POST["reset"])) {
 $lettres = "abcdefghijklmnopqrstuvwxyz";
 $_SESSION['motActuel'] = "";
 $_SESSION['motAffiché'] = ""; // Affiche les lettres que l'utilisateur aura choisi et qui sont dans le mot à trouver
-$_SESSION['tiret'] = "_";
+$_SESSION['tiret'] = "-";
 $_SESSION['lettreBonne'] = "";
 $i = 0;
 if (!isset($_SESSION['error'])) {
@@ -67,27 +67,29 @@ if (isset($_GET['a']) && strlen($_GET['a']) == 1 && strpos($lettres, $_GET['a'])
                     $found = true; // Si le mot est trouvé
 
                     if ($_SESSION['motAffiché'] != $_SESSION['mot'])
-                        $msg = "$char est dans le mot";
+                        $msg = "'$char' est dans le mot";
 
                     else {
-                        $msg = "C'est gagné !";
+                        $msg = "Vous avez gagné !";
                     }
                 }
             }
         }
     }
 
-
     //Si on tombe sur une mauvaise lettre 
     if (!$found && isset($_SESSION["error"])) {
 
         ++$_SESSION["error"];
 
-        $msg = "$char n'est pas dans le mot";
+        $msg = "'$char' n'est pas dans le mot";
     }
+    // if(!$found && isset($_SESSION["error"]) > 5) {
+    //                 $msg = "C'est perdu :(";
+    //             }
 }
 
-echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à la place
+
 
 ?>
 
@@ -102,22 +104,24 @@ echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à
 
 <body>
     <header>
-
+        <h1>Jeu du Pendu</h1>
     </header>
 
     <main>
 
         <section>
+
             <?php
-
-            // var_dump($_SESSION['mot']);
-
             if (isset($msg)) {
                 echo $msg;
             }
-            // echo $_SESSION['error'];
+            ?> <div id="error_msg">
+                <?php
+                echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à la place
+                ?>
 
-            ?>
+
+            </div>
             <img src="MEDIA/pendu<?= $_SESSION['error'] ?>.png">
 
             <section>
@@ -132,8 +136,6 @@ echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à
                             echo "<a href='index.php?a=$lettres[$i]'>$lettres[$i]</a> ";
                         }
                     }
-                } else {
-                    echo 'Vous avez perdu :(';
                 }
                 ?>
             </section>
@@ -145,9 +147,6 @@ echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à
             </article>
         </section>
     </main>
-    <footer>
-
-    </footer>
 </body>
 
 </html>
