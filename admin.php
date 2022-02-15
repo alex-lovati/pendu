@@ -1,37 +1,26 @@
 <?php
-require_once ('FONCTION/fonction.php');
+require_once('FONCTION/fonction.php');
 
-if(!isset($arrayMot)){
+if (!isset($arrayMot)) { // On compte le nombre de mot dans le fichier .txt 
     $arrayMot = file("mots.txt");
-    $mottotal = count($arrayMot,) -1;
+    $mottotal = count($arrayMot,) - 1;
 }
-if(isset($_GET["lemot"])){
 
-    if(!isset($arrayMot)){
-    $msg = "le jeu doit contenir un mot";
-    header("refresh:5; url=admin.php");
-}else{
-    $key = strip_tags(htmlspecialchars($_GET["leMot"]));
-    unset($arrayMot[$key]);
-    file_put_contents("mot.txt", $arrayMot);
-    header("location: admin.php");
-}
-}
-if (isset ($_POST ["nouveaumot"])){
-    $Nouveau=strip_tags(htmlspecialchars($_POST["nouveaumot"]));
-    $nouveaumot= $Nouveau;
-    if(strlen($_POST["nouveaumot"])>=20){
-        $msg = "le mot doit comporter moi de 20 lettres";
+if (isset($_POST["nouveaumot"])) {
+    $Nouveau = strip_tags(htmlspecialchars($_POST["nouveaumot"]));
+    $nouveaumot = $Nouveau;
+    if (strlen($_POST["nouveaumot"]) >= 15) { // Maximum de 15 lettres par mot
+        $msg = "le mot doit comporter moins de 15 lettres";
     }
-    foreach (chooseWord($arrayMot) as $key=>$mot){
-        if($mot == $nouveaumot){
-            $msg = " mot non disponible";
+    foreach (chooseWord($arrayMot) as $key => $mot) { // Si le mot rentré est identique à un mot déjà existant on met une erreur
+        if ($mot == $nouveaumot) {
+            $msg = " Le mot est déjà dans le jeu";
         }
     }
-    if (!isset($msg)){
-        $fichierMot = fopen('mot.txt','a+');
-        fputs ($fichierMot, $nouveaumot ."/n");
-        $goodmsg = "mot rentrer dans le jeu";
+    if (!isset($msg)) { // Ajout du mot dans le fichier .txt
+        $fichierMot = fopen('mots.txt', 'a+');
+        fputs($fichierMot, $nouveaumot . "\n");
+        $goodMsg = "Le mot à été rentré  dans le jeu";
     }
     header("location: admin.php");
 }
@@ -39,47 +28,50 @@ if (isset ($_POST ["nouveaumot"])){
 
 <!DOCTYPE html>
 <html lang=fr>
-    <head>
+<body>
+<head>
     <meta charset="UTF-8">
     <title>pendu</title>
     <link rel="stylesheet" href="css/style.css">
-    </head>
-    <body>
-        <head>
+</head>
 
-        </head>
-        <main>
-            <section class="container">
-                <article>
-                    <h1>Entre un nouveau mot !</h1>
-                    <form action="" method="POST">
-                        <label for="nouveaumot">Met ton nouveau mot ici ^^ -></label>
-                        <input type="text" id="nouveaumot" name="nouveaumot">
-                        <input class="btn btn-primary" type="submit" name="enoyer" value="envoyer">
-                    </form>
-                    <a class="btn btn-primary" href="index.php">Retourner jouer !</a>
-                    <h2>Listes des mots</h2>
-                    <ul>
-                        <?php
-                        if (isset($msg)) {
-                            echo $msg;
-                        }
-                        ?>
-                        <?php
-                        foreach ($arrayMot as $key => $mot) {
-                        ?>
-                            <li>Numéro : <?= $key . " " . $mot ?></li>
-                            <a class="btn btn-danger" href="./admin.php?leMot=<?= $key ?>">supprimer</a>
-                        <?php
-                        }
-                        ?>
-                    <ul>
-                </article>
-            </section>
-        </main>
-        <footer>
 
-        </footer>
-    </body>
+
+    <header>
+        <h1>Jeu du Pendu</h1>
+    </header>
+
+    <main>
+        <section class="container">
+            <article>
+                <h1>Entrez un nouveau mot :</h1>
+                <form action="" method="POST">
+                    <label for="nouveaumot">Rentrez un nouveau mot ici ^^ -></label>
+                    <input type="text" id="nouveaumot" name="nouveaumot">
+                    <input class="btn btn-primary" type="submit" name="enoyer" value="envoyer">
+                </form>
+                <a class="btn btn-primary" href="index.php">Retourner au jeu !</a>
+                <h2>Listes des mots</h2>
+                <ul>
+                    <?php
+                    if (isset($msg)) {
+                        echo $msg;
+                    }
+                    ?>
+                    <?php
+                    foreach ($arrayMot as $key => $mot) {
+                    ?>
+                        <li>Numéro <?= $key . " - " . $mot ?></li>
+                    <?php
+                    }
+                    ?>
+                    <ul>
+            </article>
+        </section>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+
 </html>
-
