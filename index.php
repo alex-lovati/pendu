@@ -11,10 +11,8 @@ if (isset($_POST["reset"])) {
 
 // Création des variables de session
 $lettres = "abcdefghijklmnopqrstuvwxyz";
-$_SESSION['motActuel'] = "";
 $_SESSION['motAffiché'] = ""; // Affiche les lettres que l'utilisateur aura choisi et qui sont dans le mot à trouver
 $_SESSION['tiret'] = "-";
-$_SESSION['lettreBonne'] = "";
 $i = 0;
 if (!isset($_SESSION['error'])) {
     $_SESSION['error'] = 0;
@@ -66,30 +64,16 @@ if (isset($_GET['a']) && strlen($_GET['a']) == 1 && strpos($lettres, $_GET['a'])
 
                     $found = true; // Si le mot est trouvé
 
-                    if ($_SESSION['motAffiché'] != $_SESSION['mot'])
+                    if ($_SESSION['motAffiché'] != $_SESSION['mot']) {
                         $msg = "'$char' est dans le mot";
-
-                    else {
+                    } else {
                         $msg = "Vous avez gagné !";
                     }
                 }
             }
         }
     }
-
-    //Si on tombe sur une mauvaise lettre 
-    if (!$found && isset($_SESSION["error"])) {
-
-        ++$_SESSION["error"];
-
-        $msg = "'$char' n'est pas dans le mot";
-    }
-    // if(!$found && isset($_SESSION["error"]) > 5) {
-    //                 $msg = "C'est perdu :(";
-    //             }
 }
-
-
 
 ?>
 
@@ -120,7 +104,6 @@ if (isset($_GET['a']) && strlen($_GET['a']) == 1 && strpos($lettres, $_GET['a'])
                 echo $_SESSION['motAffiché']; // Affiche les lettres trouvées ou des tirets à la place
                 ?>
 
-
             </div>
             <img src="MEDIA/pendu<?= $_SESSION['error'] ?>.png">
 
@@ -136,13 +119,23 @@ if (isset($_GET['a']) && strlen($_GET['a']) == 1 && strpos($lettres, $_GET['a'])
                             echo "<a href='index.php?a=$lettres[$i]'>$lettres[$i]</a> ";
                         }
                     }
+                } elseif ($_SESSION['error'] >= 7) { // Affiche le mot à la fin si on perd
+                    echo 'Le mot était ';
+                    echo $_SESSION["mot"];
                 }
+
+                if (isset($_SESSION['lettre'])) { // Affiche les lettres déjà utilisées
+                    echo '<br>Lettres déjà utilisées : ';
+                    echo $_SESSION['lettre'];
+                }
+
                 ?>
             </section>
             <article>
                 <form action="" method="POST">
                     <input type="submit" name="reset" value="Nouvelle partie">
                 </form>
+                <br>
                 <a href="admin.php">Ajouter un mot</a>
             </article>
         </section>
