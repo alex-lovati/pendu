@@ -73,7 +73,17 @@ if (isset($_GET['a']) && strlen($_GET['a']) == 1 && strpos($lettres, $_GET['a'])
             }
         }
     }
+
+    //Si on tombe sur une mauvaise lettre 
+    if (!$found && isset($_SESSION["error"])) {
+
+        ++$_SESSION["error"];
+
+        $msg = "'$char' n'est pas dans le mot";
+    }
 }
+
+
 
 ?>
 
